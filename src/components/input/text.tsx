@@ -7,16 +7,20 @@ type AppInputProps = {
   label: string;
   name: string;
   type?: string;
+  as?: "input" | "textarea";
   placeholder?: string;
   icon?: React.ReactNode;
+  containerClassName?: string;
 };
 
 const AppTextInput: React.FC<AppInputProps> = ({
   label,
   name,
   type = "text",
+  as = "input",
   placeholder = "",
   icon,
+  containerClassName,
 }) => {
   const [field, meta] = useField(name);
   const hasError = meta.touched && meta.error;
@@ -25,11 +29,28 @@ const AppTextInput: React.FC<AppInputProps> = ({
 
   const isFloating = isFocused || !!field.value;
   const isPasswordType = type === "password";
-
   const inputType = isPasswordType && !showPassword ? "password" : "text";
 
+  const sharedProps = {
+    ...field,
+    id: name,
+    placeholder: isFloating ? placeholder : "",
+    onFocus: () => setIsFocused(true),
+    onBlur: (e: any) => {
+      field.onBlur(e);
+      setIsFocused(false);
+    },
+    className: `peer w-full border-[1.5px] rounded-md py-3 px-3 text-base bg-transparent text-gray-900 dark:text-white transition-all duration-300
+      ${icon ? "pl-10" : ""}
+      ${hasError
+        ? "border-red-500 focus:border-red-500"
+        : "border-gray-200 dark:border-gray-700/60 focus:border-violet-700 focus:dark:border-violet-700"}
+      placeholder-transparent focus:outline-none focus:ring-0 pr-10 resize-none
+    `,
+  };
+
   return (
-    <div className="relative w-full">
+    <div className={`relative w-full ${containerClassName}`}>
       {/* Floating Label */}
       <motion.label
         htmlFor={name}
@@ -37,22 +58,27 @@ const AppTextInput: React.FC<AppInputProps> = ({
           top: isFloating ? 0 : "50%",
           left: icon ? "36px" : "12px",
           fontSize: isFloating ? "12px" : "14px",
-          // color: hasError ? "#ef4444" : isFocused ? "#5d47de" : "#fff",
         }}
         transition={{ duration: 0.2 }}
         className={`absolute z-10 origin-left bg-white dark:bg-gray-800 px-1 pointer-events-none
           ${hasError ? 'text-red-500'
             : isFocused ? 'text-violet-700'
-            : 'text-gray-500 dark:text-gray-300'
-          }
+            : 'text-gray-500 dark:text-gray-300'}
         `}
         style={{
-          transform:
+          transform: as == 'textarea' ? 
             hasError && isFloating
               ? "translateY(-50%)"
               : hasError
-              ? "translateY(-100%)"
-              : "translateY(-50%)",
+              ? "translateY(-50%)"
+              : !hasError && isFloating 
+              ? 'translateY(-50%)'
+              : "translateY(-220%)"
+          :    hasError && isFloating
+          ? "translateY(-50%)"
+          : hasError
+          ? "translateY(-100%)"
+          : "translateY(-50%)"
         }}
       >
         {label}
@@ -65,31 +91,23 @@ const AppTextInput: React.FC<AppInputProps> = ({
         </div>
       )}
 
-      {/* Input Field */}
-      <motion.input
-        {...field}
-        id={name}
-        type={inputType}
-        placeholder={isFloating ? placeholder : ""}
-        onFocus={() => setIsFocused(true)}
-        onBlur={(e) => {
-          field.onBlur(e);
-          setIsFocused(false);
-        }}
-        className={`peer w-full border-[1.5px] rounded-md py-3 px-3 text-base bg-transparent text-gray-900 dark:text-white transition-all duration-300
-          ${icon ? "pl-10" : ""}
-          ${
-            hasError
-              ? "border-red-500 focus:border-red-500"
-              : "border-gray-200 dark:border-gray-700/60 focus:border-violet-700 focus:dark:border-violet-700"
-          }
-          placeholder-transparent focus:outline-none focus:ring-0 pr-10
-        `}
-        whileFocus={{ scale: 1.01 }}
-      />
+      {/* Input or Textarea */}
+      {as === "textarea" ? (
+        <motion.textarea
+          {...sharedProps}
+          rows={4}
+          whileFocus={{ scale: 1.01 }}
+        />
+      ) : (
+        <motion.input
+          {...sharedProps}
+          type={inputType}
+          whileFocus={{ scale: 1.01 }}
+        />
+      )}
 
       {/* Password Toggle */}
-      {isPasswordType && (
+      {isPasswordType && as === "input" && (
         <button
           type="button"
           onClick={() => setShowPassword((prev) => !prev)}
@@ -99,7 +117,7 @@ const AppTextInput: React.FC<AppInputProps> = ({
         </button>
       )}
 
-      {/* Error message */}
+      {/* Error Message */}
       {hasError && (
         <motion.div
           initial={{ opacity: 0, y: -4 }}

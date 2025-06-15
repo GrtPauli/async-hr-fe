@@ -1,7 +1,9 @@
 import UserAvatar from "../assets/images/user-avatar-32.png";
+import UserImg from "../assets/images/user.png";
 
 export const IMAGES = {
   UserAvatar,
+  UserImg
 };
 
 export const APP_LINKS = {

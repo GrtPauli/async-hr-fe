@@ -2,11 +2,12 @@ import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Transition from '../../utils/transition';
 import { IMAGES } from '../../constants';
+import { useAuthContext } from '../../context/auth';
 
 function DropdownProfile({
   align
 }: any) {
-
+  const {logout} = useAuthContext()
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const trigger = useRef<any>(null);
@@ -74,20 +75,22 @@ function DropdownProfile({
             <li>
               <Link
                 className="font-medium text-sm text-violet-500 hover:text-violet-600 dark:hover:text-violet-400 flex items-center py-1 px-3"
-                to="/settings"
+                to="/my-profile"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                Settings
+                My Profile
               </Link>
             </li>
             <li>
-              <Link
+              <button
                 className="font-medium text-sm text-violet-500 hover:text-violet-600 dark:hover:text-violet-400 flex items-center py-1 px-3"
-                to="/signin"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
+                onClick={() => {
+                  setDropdownOpen(!dropdownOpen)
+                  logout()
+                }}
               >
                 Sign Out
-              </Link>
+              </button>
             </li>
           </ul>
         </div>

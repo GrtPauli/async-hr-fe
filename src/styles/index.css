@@ -145,73 +145,19 @@
 /* ========== Nexa Trial ========== */
 @font-face {
   font-family: 'Nexa';
-  src: url('/src/assets/fonts/nexa-trial-thin.otf') format('opentype');
-  font-weight: 100;
+  src: url('/src/assets/fonts/Nexa\ Light.otf') format('opentype');
+  font-weight: 200;
 }
 
 @font-face {
   font-family: 'Nexa';
-  src: url('/src/assets/fonts/nexa-trial-light.otf') format('opentype');
-  font-weight: 300;
-}
-
-@font-face {
-  font-family: 'Nexa';
-  src: url('/src/assets/fonts/nexa-trial-regular.otf') format('opentype');
+  src: url('/src/assets/fonts/Nexa\ Regular.otf') format('opentype');
   font-weight: 400;
 }
 
 @font-face {
   font-family: 'Nexa';
-  src: url('/src/assets/fonts/nexa-trial-bold.otf') format('opentype');
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: 'Nexa';
-  src: url('/src/assets/fonts/nexa-trial-heavy.otf') format('opentype');
+  src: url('/src/assets/fonts/Nexa\ Bold.otf') format('opentype');
   font-weight: 800;
 }
 
-@font-face {
-  font-family: 'Nexa';
-  src: url('/src/assets/fonts/nexa-trial-xbold.otf') format('opentype');
-  font-weight: 900;
-}
-
-/* ========== Nexa Text Trial ========== */
-@font-face {
-  font-family: 'Nexa Text';
-  src: url('../assets/fonts/nexatext-trial-thin.otf') format('opentype');
-  font-weight: 100;
-}
-
-@font-face {
-  font-family: 'Nexa Text';
-  src: url('../assets/fonts/nexatext-trial-light.otf') format('opentype');
-  font-weight: 300;
-}
-
-@font-face {
-  font-family: 'Nexa Text';
-  src: url('../assets/fonts/nexatext-trial-regular.otf') format('opentype');
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: 'Nexa Text';
-  src: url('../assets/fonts/nexatext-trial-bold.otf') format('opentype');
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: 'Nexa Text';
-  src: url('../assets/fonts/nexatext-trial-heavy.otf') format('opentype');
-  font-weight: 800;
-}
-
-@font-face {
-  font-family: 'Nexa Text';
-  src: url('../assets/fonts/nexatext-trial-extrabold.otf') format('opentype');
-  font-weight: 900;
-}

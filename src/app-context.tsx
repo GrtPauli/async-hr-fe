@@ -1,5 +1,6 @@
 import type { ComponentProps, FC, JSX } from "react";
 import ThemeContextProvider from "./context/theme";
+import { AuthContextProvider } from "./context/auth";
 
 
 export const combineContext = (...components: FC[]): FC<any> => {
@@ -19,7 +20,8 @@ export const combineContext = (...components: FC[]): FC<any> => {
 };
 
 const providers = [
-    ThemeContextProvider
+    ThemeContextProvider,
+    AuthContextProvider
 ] as any;
 
 export const AppContextProvider = combineContext(...providers);
