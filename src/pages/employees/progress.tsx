@@ -1,14 +1,14 @@
-import AppCard from "../../../components/card";
+import AppCard from "../../components/card";
 import { ConfigProvider, Progress } from "antd";
 import { FaCircleCheck } from "react-icons/fa6";
 import { MdCancel } from "react-icons/md";
-import type { ProfileStatus } from "../../../types/profile";
+import type { Profile } from "../../types/profile";
 
 interface IProps {
-  status: ProfileStatus
+  profile: Profile
 }
 
-export default function ProfileProgress({ status }: IProps) {
+export default function EmployeeProfileProgress({ profile }: IProps) {
   return (
     <div className="w-[40%]">
       <AppCard className="h-full">
@@ -20,7 +20,7 @@ export default function ProfileProgress({ status }: IProps) {
           <div className="flex gap-5 items-center justify-between">
             <div className="text-sm font-light flex flex-col gap-2 justify-between">
               <div className="flex items-center gap-3">
-                {status?.completedSections?.basicDetails ? (
+                {profile?.basicDetails?.completed ? (
                   <FaCircleCheck size={20} className="text-violet-700" />
                 ) : (
                   <MdCancel size={20} className="text-red-500" />
@@ -31,7 +31,7 @@ export default function ProfileProgress({ status }: IProps) {
               </div>
 
               <div className="flex items-center gap-3">
-                {status?.completedSections?.contactDetails ? (
+                {profile?.contactDetails?.completed ? (
                   <FaCircleCheck size={20} className="text-violet-700" />
                 ) : (
                   <MdCancel size={20} className="text-red-500" />
@@ -42,7 +42,7 @@ export default function ProfileProgress({ status }: IProps) {
               </div>
 
               <div className="flex items-center gap-3">
-                {status?.completedSections?.jobDetails ? (
+                {profile?.jobDetails?.completed ? (
                   <FaCircleCheck size={20} className="text-violet-700" />
                 ) : (
                   <MdCancel size={20} className="text-red-500" />
@@ -51,7 +51,7 @@ export default function ProfileProgress({ status }: IProps) {
               </div>
 
               <div className="flex items-center gap-3">
-                {status?.completedSections?.bankDetails ? (
+                {profile?.bankDetails?.completed ? (
                   <FaCircleCheck size={20} className="text-violet-700" />
                 ) : (
                   <MdCancel size={20} className="text-red-500" />
@@ -60,7 +60,7 @@ export default function ProfileProgress({ status }: IProps) {
               </div>
 
               <div className="flex items-center gap-3">
-                {status?.completedSections?.documents ? (
+                {profile?.documents?.completed ? (
                   <FaCircleCheck size={20} className="text-violet-700" />
                 ) : (
                   <MdCancel size={20} className="text-red-500" />
@@ -79,7 +79,7 @@ export default function ProfileProgress({ status }: IProps) {
               <Progress
                 type="dashboard"
                 steps={8}
-                percent={status?.completionPercentage}
+                percent={profile?.completionPercentage}
                 trailColor="rgba(0, 0, 0, 0.06)"
                 strokeColor="#5d47de"
                 strokeWidth={20}

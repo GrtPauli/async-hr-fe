@@ -1,6 +1,9 @@
 import type { ComponentProps, FC, JSX } from "react";
 import ThemeContextProvider from "./context/theme";
 import { AuthContextProvider } from "./context/auth";
+import { ProfileContextProvider } from "./context/profile";
+import { AttendanceContextProvider } from "./context/attendance";
+import { AdminContextProvider } from "./context/admin";
 
 
 export const combineContext = (...components: FC[]): FC<any> => {
@@ -21,7 +24,10 @@ export const combineContext = (...components: FC[]): FC<any> => {
 
 const providers = [
     ThemeContextProvider,
-    AuthContextProvider
+    AuthContextProvider,
+    ProfileContextProvider,
+    AttendanceContextProvider,
+    AdminContextProvider
 ] as any;
 
 export const AppContextProvider = combineContext(...providers);

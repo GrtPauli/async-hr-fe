@@ -2,15 +2,15 @@ import React, { useRef, useEffect, useState } from 'react';
 
 import { chartColors } from './chartjs-config';
 import {
-  Chart, BarController, BarElement, LinearScale, TimeScale, Tooltip, Legend,
+  Chart, BarController, BarElement, LinearScale, CategoryScale, Tooltip, Legend,
 } from 'chart.js';
-import 'chartjs-adapter-moment';
+// import 'chartjs-adapter-moment';
 
 // Import utilities
 import { formatValue } from '../../utils';
 import { useThemeProvider } from '../../context/theme';
 
-Chart.register(BarController, BarElement, LinearScale, TimeScale, Tooltip, Legend);
+Chart.register(BarController, BarElement, LinearScale, CategoryScale, Tooltip, Legend);
 
 function BarChart01({
   data,
@@ -47,7 +47,7 @@ function BarChart01({
             },
             ticks: {
               maxTicksLimit: 5,
-              callback: (value: any) => formatValue(value),
+              callback: (value: any) => value,
               color: darkMode ? textColor.dark : textColor.light,
             },
             grid: {
@@ -55,14 +55,8 @@ function BarChart01({
             },
           },
           x: {
-            type: 'time',
-            time: {
-              parser: 'MM-DD-YYYY',
-              unit: 'month',
-              displayFormats: {
-                month: 'MMM YY',
-              },
-            },
+            // Change from time scale to category scale
+            type: 'category',
             border: {
               display: false,
             },
@@ -81,7 +75,7 @@ function BarChart01({
           tooltip: {
             callbacks: {
               title: () => false, // Disable tooltip title
-              label: (context: any) => formatValue(context.parsed.y),
+              label: (context: any) => context.parsed.y,
             } as any,
             bodyColor: darkMode ? tooltipBodyColor.dark : tooltipBodyColor.light,
             backgroundColor: darkMode ? tooltipBgColor.dark : tooltipBgColor.light,
@@ -112,50 +106,52 @@ function BarChart01({
             const items = c.options.plugins.legend.labels.generateLabels(c);
             items.forEach((item: any) => {
               const li = document.createElement('li');
-              // Button element
-              const button = document.createElement('button');
-              button.style.display = 'inline-flex';
-              button.style.alignItems = 'center';
-              button.style.opacity = item.hidden ? '.3' : '';
-              button.onclick = () => {
-                c.setDatasetVisibility(item.datasetIndex, !c.isDatasetVisible(item.datasetIndex));
-                c.update();
-              };
-              // Color box
+              li.style.display = 'inline-flex';
+              li.style.alignItems = 'center';
+              li.style.marginRight = '16px';
+              
+              // Color indicator
               const box = document.createElement('span');
               box.style.display = 'block';
               box.style.width = '12px';
               box.style.height = '12px';
-              box.style.borderRadius = 'calc(infinity * 1px)';
+              box.style.borderRadius = '3px';
               box.style.marginRight = '8px';
-              box.style.borderWidth = '3px';
-              box.style.borderColor = item.fillStyle;
+              box.style.backgroundColor = item.fillStyle;
               box.style.pointerEvents = 'none';
-              // Label
-              const labelContainer = document.createElement('span');
-              labelContainer.style.display = 'flex';
-              labelContainer.style.alignItems = 'center';
+              
+              // Value container
+              const valueContainer = document.createElement('div');
+              valueContainer.style.display = 'flex';
+              valueContainer.style.flexDirection = 'column';
+              
+              // Value
               const value = document.createElement('span');
-              value.classList.add('text-gray-800', 'dark:text-gray-100');
-              value.style.fontSize = '30px';
-              value.style.lineHeight = 'calc(2.25 / 1.875)';
-              value.style.fontWeight = '700';
-              value.style.marginRight = '8px';
-              value.style.pointerEvents = 'none';
+              value.style.fontSize = '16px';
+              value.style.fontWeight = '600';
+              value.style.color = darkMode ? '#F3F4F6' : '#111827'; // Light/dark text color
+              value.style.lineHeight = '1.25';
+              
+              // Label
               const label = document.createElement('span');
-              label.classList.add('text-gray-500', 'dark:text-gray-400');
-              label.style.fontSize = '14px';
-              label.style.lineHeight = 'calc(1.25 / 0.875)';
+              label.style.fontSize = '12px';
+              label.style.color = darkMode ? '#9CA3AF' : '#6B7280'; // Light/dark muted color
+              label.style.lineHeight = '1.25';
+              
+              // Calculate and format the value
               const theValue = c.data.datasets[item.datasetIndex].data.reduce((a: any, b: any) => a + b, 0);
-              const valueText = document.createTextNode(formatValue(theValue));
-              const labelText = document.createTextNode(item.text);
-              value.appendChild(valueText);
-              label.appendChild(labelText);
-              li.appendChild(button);
-              button.appendChild(box);
-              button.appendChild(labelContainer);
-              labelContainer.appendChild(value);
-              labelContainer.appendChild(label);
+              const formattedValue = item.text === 'Hours Worked' 
+                ? theValue.toFixed(1) // Show 1 decimal for hours
+                : Math.round(theValue); // Round days to whole number
+              
+              value.textContent = "";
+              label.textContent = item.text;
+              
+              // Append elements
+              valueContainer.appendChild(value);
+              valueContainer.appendChild(label);
+              li.appendChild(box);
+              li.appendChild(valueContainer);
               ul.appendChild(li);
             });
           },
@@ -169,7 +165,7 @@ function BarChart01({
 
   useEffect(() => {
     if (!chart) return;
-
+  
     if (darkMode) {
       chart.options.scales.x.ticks.color = textColor.dark;
       chart.options.scales.y.ticks.color = textColor.dark;

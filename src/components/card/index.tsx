@@ -10,7 +10,7 @@ export default function AppCard({ children, className }: IProps) {
   return (
     <div
       className={twMerge(
-        "p-5 flex flex-col col-span-full sm:col-span-6 xl:col-span-4 bg-white dark:bg-gray-800 shadow-xs rounded-xl",
+        "p-5 flex flex-col h-full col-span-full sm:col-span-6 xl:col-span-4 bg-white dark:bg-gray-800 shadow-xs rounded-xl",
         className
       )}
     >

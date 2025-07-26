@@ -11,6 +11,7 @@ type AppInputProps = {
   placeholder?: string;
   icon?: React.ReactNode;
   containerClassName?: string;
+  disabled?: boolean
 };
 
 const AppTextInput: React.FC<AppInputProps> = ({
@@ -21,6 +22,7 @@ const AppTextInput: React.FC<AppInputProps> = ({
   placeholder = "",
   icon,
   containerClassName,
+  disabled
 }) => {
   const [field, meta] = useField(name);
   const hasError = meta.touched && meta.error;
@@ -29,7 +31,7 @@ const AppTextInput: React.FC<AppInputProps> = ({
 
   const isFloating = isFocused || !!field.value;
   const isPasswordType = type === "password";
-  const inputType = isPasswordType && !showPassword ? "password" : "text";
+  const inputType = isPasswordType && !showPassword ? "password" : type;
 
   const sharedProps = {
     ...field,
@@ -40,7 +42,7 @@ const AppTextInput: React.FC<AppInputProps> = ({
       field.onBlur(e);
       setIsFocused(false);
     },
-    className: `peer w-full border-[1.5px] rounded-md py-3 px-3 text-base bg-transparent text-gray-900 dark:text-white transition-all duration-300
+    className: `peer w-full border-[1.5px] rounded-md py-3 px-3 text-sm bg-transparent text-gray-900 dark:text-white transition-all duration-300
       ${icon ? "pl-10" : ""}
       ${hasError
         ? "border-red-500 focus:border-red-500"
@@ -95,12 +97,14 @@ const AppTextInput: React.FC<AppInputProps> = ({
       {as === "textarea" ? (
         <motion.textarea
           {...sharedProps}
+          disabled={disabled}
           rows={4}
           whileFocus={{ scale: 1.01 }}
         />
       ) : (
         <motion.input
           {...sharedProps}
+          disabled={disabled}
           type={inputType}
           whileFocus={{ scale: 1.01 }}
         />

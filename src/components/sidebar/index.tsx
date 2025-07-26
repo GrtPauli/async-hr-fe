@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import SidebarLinkGroup from "./link-group";
-import { APP_LINKS } from "../../constants";
+import { APP_LINKS, ADMIN_APP_LINKS } from "../../constants";
 import AppLogo from "../icons/logo";
+import { useProfileContext } from "../../context/profile";
 
 interface SidebarLink {
   title: string;
-  icon: string;
+  icon: any;
   path?: string;
   children?: SidebarLink[];
   badge?: string;
@@ -18,6 +19,10 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = "default" }: any) {
 
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
+
+  const {profile} = useProfileContext()
+
+  const links = profile?.user?.userType == 'admin' ? ADMIN_APP_LINKS : APP_LINKS
 
   const storedSidebarExpanded = localStorage.getItem("sidebar-expanded");
   const [sidebarExpanded, setSidebarExpanded] = useState<any>(
@@ -84,19 +89,32 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = "default" }: any) {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <svg
-                    className={`shrink-0 fill-current ${
-                      isActive
-                        ? "text-violet-500"
-                        : "text-gray-400 dark:text-gray-500"
-                    }`}
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    dangerouslySetInnerHTML={{ __html: link.icon }}
-                  />
-                  <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                  {typeof link.icon === "string" ? (
+                    <svg
+                      className={`shrink-0 fill-current ${
+                        isActive
+                          ? "text-violet-500"
+                          : "text-gray-400 dark:text-gray-500"
+                      }`}
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      dangerouslySetInnerHTML={{ __html: link.icon }}
+                    />
+                  ) : (
+                    <div
+                      className={`text-xl ${
+                        isActive
+                          ? "text-violet-500"
+                          : "text-gray-400 dark:text-gray-500"
+                      }`}
+                    >
+                      {link.icon()}
+                    </div>
+                  )}
+
+                  <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
                     {link.title}
                   </span>
                 </div>
@@ -236,7 +254,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = "default" }: any) {
           </button>
           {/* Logo */}
           <NavLink end to="/" className="block">
-            <AppLogo/>
+            <AppLogo />
           </NavLink>
         </div>
 
@@ -256,28 +274,34 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = "default" }: any) {
               </span>
             </h3>
             <ul className="mt-3">
-              {APP_LINKS.pages.map((link: any) => renderLinkGroup(link, "pages"))}
-              {APP_LINKS.singleLinks.map((link: any) => renderSingleLink(link))}
+              {links.pages.map((link: any) =>
+                renderLinkGroup(link, "pages")
+              )}
+              {links.singleLinks.map((link: any) => renderSingleLink(link))}
             </ul>
           </div>
 
           {/* More group */}
-          <div>
-            <h3 className="text-xs uppercase text-gray-400 dark:text-gray-500 font-semibold pl-3">
-              <span
-                className="hidden lg:block lg:sidebar-expanded:hidden 2xl:hidden text-center w-6"
-                aria-hidden="true"
-              >
-                •••
-              </span>
-              <span className="lg:hidden lg:sidebar-expanded:block 2xl:block">
-                More
-              </span>
-            </h3>
-            <ul className="mt-3">
-              {APP_LINKS.more.map((link: any) => renderLinkGroup(link, "more"))}
-            </ul>
-          </div>
+          {links.more?.length > 0 && (
+            <div>
+              <h3 className="text-xs uppercase text-gray-400 dark:text-gray-500 font-semibold pl-3">
+                <span
+                  className="hidden lg:block lg:sidebar-expanded:hidden 2xl:hidden text-center w-6"
+                  aria-hidden="true"
+                >
+                  •••
+                </span>
+                <span className="lg:hidden lg:sidebar-expanded:block 2xl:block">
+                  More
+                </span>
+              </h3>
+              <ul className="mt-3">
+                {links.more.map((link: any) =>
+                  renderLinkGroup(link, "more")
+                )}
+              </ul>
+            </div>
+          )}
         </div>
 
         {/* Expand / collapse button */}

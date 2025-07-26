@@ -1,6 +1,7 @@
 // components/AnimatedButton.tsx
 import { motion } from 'framer-motion';
 import { twMerge } from 'tailwind-merge';
+import AppLoader from '../loader';
 
 type ButtonProps = {
   children: React.ReactNode;
@@ -9,6 +10,7 @@ type ButtonProps = {
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
   className?: string;
+  loading?: boolean
 };
 
 const variantStyles: Record<string, string> = {
@@ -26,11 +28,12 @@ const AppButton = ({
   disabled = false,
   type = 'button',
   className = '',
+  loading
 }: ButtonProps) => {
   const baseClasses =
     'h-12 px-6 rounded-full font-semibold focus:outline-none transition-all duration-200 will-change-transform cursor-pointer';
 
-  const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed' : '';
+  const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed !bg-gray-200 !text-gray-500' : '';
   const finalClassName = twMerge(
     baseClasses,
     variantStyles[variant],
@@ -57,7 +60,7 @@ const AppButton = ({
       }}
       className={finalClassName}
     >
-      {children}
+      {loading ? <AppLoader className="!text-white !h-4 !w-4"/> : children}
     </motion.button>
   );
 };
